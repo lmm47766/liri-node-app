@@ -23,73 +23,53 @@ inquirer
     }  
     ]).then(function(res) {
 
-    	console.log("Hi "+res.name);
+    	console.log("Welcome "+res.name);
 
-    	  inquirer
-    	  .prompt([
-		    {
-		      type: "list",
-		      message: "What would you like to do?",
-		      choices: ["my-tweets", "spotify-this-song", "movie-this","do-what-it-says"],
-		      name: "result"
-		    } 
-
-		    ]).then(function(choice) {
-
-		    	var action = choice.result;
-
-				switch(action){
-					case "my-tweets":
-						tweet();
-						break;
-
-					case"spotify-this-song":
-						spotify();
-						break;
-
-					case "movie-this":
-						movie();
-						break;
-
-					case "do-what-it-says":
-						doWhat();
-						break;
-					case "soccer":
-						soccer();	
-						break;
-
-				}
-
-		    });
+    	prompt();
 
 
     });
 
+function prompt(){
 
+	  inquirer
+	  .prompt([
+	    {
+	      type: "list",
+	      message: "What would you like to do?",
+	      choices: ["my-tweets", "spotify-this-song", "movie-this","do-what-it-says","quit"],
+	      name: "result"
+	    } 
 
+	    ]).then(function(choice) {
 
-switch(action){
-	case "my-tweets":
-		tweet();
-		break;
+	    	var action = choice.result;
 
-	case"spotify-this-song":
-		spotify();
-		break;
+			switch(action){
+				case "my-tweets":
+					tweet();
+					break;
 
-	case "movie-this":
-		movie();
-		break;
+				case"spotify-this-song":
+					spotify();
+					break;
 
-	case "do-what-it-says":
-		doWhat();
-		break;
-	case "soccer":
-		soccer();	
-		break;
+				case "movie-this":
+					movie();
+					break;
+
+				case "do-what-it-says":
+					doWhat();
+					break;
+				case "quit":
+					quit();	
+					break;
+
+			}
+
+	    });
 
 }
-
 
 
 function tweet(){
@@ -105,13 +85,13 @@ function tweet(){
 			fs.appendFile("log.txt", tweet + "\n", function(data) {
 
 			});
+			prompt();
 
 		}
 
 	});	
 
 }
-
 
 function spotify(test){
 
@@ -131,12 +111,17 @@ function spotify(test){
 
 		    	console.log(data.song);
 
+		    	if (data.song === "") {
+					data.song="The Sign Ace of Base";
+				}
+
+
 				sKeys.search({ type: 'track', query: data.song }, function(err, data) {
 
 					if (err) {
 						return console.log('Error occurred: ' + err);
 					}
-					for(var i=0; i < 10; i++){
+					for(var i=0; i < 4; i++){
 
 						var songInfo = "Song: " + data.tracks.items[i].name + "\n"+
 								"Artists: " + data.tracks.items[i].album.artists[0].name+"\n"+
@@ -150,6 +135,7 @@ function spotify(test){
 						});
 					}
 
+					prompt();
 				});
 
 		    });
@@ -174,6 +160,7 @@ function spotify(test){
 				fs.appendFile("log.txt", songInfo + "\n", function(data) {
 
 				});
+				prompt();
 			}
 
 		});
@@ -220,6 +207,7 @@ function movie(){
 				fs.appendFile("log.txt", movieInfo + "\n", function(data) {
 
 				});
+				prompt();
 
 			}
 
@@ -240,9 +228,12 @@ function doWhat(){
 			console.log(data);
 			var dataArr = data.split("\"");
 			spotify(dataArr[1]);
+			prompt();
 
 	});
 }
 
-
+function quit(){
+	console.log("Thanks for using liri");
+}
 

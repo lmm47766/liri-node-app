@@ -9,8 +9,6 @@ var sKeys = new Spotify(keys.spotifyKeys);
 
 var request = require("request");
 
-const getMatches = require('football-matches');
-
 var fs = require("fs");
 
 var action = process.argv[2];
@@ -31,9 +29,6 @@ switch(action){
 
 	case "do-what-it-says":
 		doWhat();
-		break;
-	case "soccer":
-		soccer();	
 		break;
 
 }
@@ -65,14 +60,16 @@ function spotify(test){
 	if (test === undefined) {
 		var input = process.argv;
 		var song = input.splice(3).join(" ");
-		console.log(song);
+		if (input.splice(3).join(" ") === "") {
+			song="The Sign Ace of Base";
+		}
 
 		sKeys.search({ type: 'track', query: song }, function(err, data) {
 
 			if (err) {
 				return console.log('Error occurred: ' + err);
 			}
-			for(var i=0; i < 10; i++){
+			for(var i=0; i < 4; i++){
 
 				var songInfo = "Song: " + data.tracks.items[i].name + "\n"+
 						"Artists: " + data.tracks.items[i].album.artists[0].name+"\n"+
@@ -164,8 +161,5 @@ function doWhat(){
 	});
 }
 
-function soccer(){
 
-
-}
 
